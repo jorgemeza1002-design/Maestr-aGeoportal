@@ -547,10 +547,6 @@
       color:#111827;
     }
 
-    .ol-wrap{
-      display:block;
-    }
-
     .ol-panel .panel-header{
       padding:22px 22px 0 22px;
     }
@@ -566,30 +562,6 @@
       line-height:1.75;
     }
 
-    .map-stage{
-      height:640px;
-      min-height:640px;
-      padding:14px;
-      border-radius:20px;
-      overflow:hidden;
-      background:#08111e;
-    }
-
-    .map-unido-canvas{
-      width:100%;
-      height:100%;
-      min-height:610px;
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,0.08);
-      background:rgba(255,255,255,0.03);
-    }
-
-    .map-unido-canvas .ol-viewport,
-    .map-unido-canvas .ol-layer canvas {
-      border-radius: 18px;
-    }
-
     .coord-box{
       margin-top:12px;
       padding:12px 14px;
@@ -598,6 +570,17 @@
       border:1px solid var(--line);
       font-weight:600;
       color:#ffe09b;
+    }
+
+    #js-map{
+      width:100%;
+      height:640px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.03);
+      margin:22px;
+      width:calc(100% - 44px);
     }
 
     .pdf-grid{
@@ -706,11 +689,10 @@
         grid-template-columns:1fr 1fr;
       }
 
-      .map-stage,
+      #js-map,
       .pdf-frame iframe,
       .qgis-frame iframe{
         height:560px;
-        min-height:560px;
       }
     }
 
@@ -728,11 +710,10 @@
         min-height:340px;
       }
 
-      .map-stage,
+      #js-map,
       .pdf-frame iframe,
       .qgis-frame iframe{
         height:460px;
-        min-height:460px;
       }
     }
   </style>
@@ -1007,7 +988,7 @@
         <div class="section-head">
           <div>
             <h3>Mapa unido integrado</h3>
-            <p>Visor OpenLayers con mapa base OSM, superposición WMS desde GeoServer, barra de escala y coordenadas en Lat/Long.</p>
+            <p>Visor OpenLayers con OpenStreetMap, capa WMS de IDESINDE, barra de escala y coordenadas en Lat/Long.</p>
           </div>
         </div>
 
@@ -1015,16 +996,10 @@
           <div class="panel-header">
             <h4>Visor OpenLayers del mapa unido</h4>
             <p>Este apartado integra OpenStreetMap como fondo y la capa <code>Meza:Meza</code> desde GeoServer.</p>
-            <div class="coord-box" id="coordBox">Coordenadas: mueve el cursor sobre el mapa</div>
+            <div class="coord-box" id="coordBox">Lat: -- | Lon: --</div>
           </div>
 
-          <div class="ol-wrap">
-            <div class="control-card" style="padding: 18px; margin: 22px;">
-              <div class="map-stage" style="height: 640px; min-height: 640px; padding: 14px;">
-                <div id="js-map" class="map-unido-canvas" aria-label="Mapa unido con OpenLayers"></div>
-              </div>
-            </div>
-          </div>
+          <div id="js-map" aria-label="Mapa unido con OpenLayers"></div>
         </article>
       </div>
     </section>
@@ -1119,7 +1094,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/ol@v10.4.0/dist/ol.js"></script>
-  <script src="mapa.js"></script>
 
   <script>
     const geoserverBase = 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms';
@@ -1147,6 +1121,41 @@
 
     document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('mapa').src = getWmsPreviewUrl('Meza:Meza');
+
+      const map = new ol.Map({
+        view: new ol.View({
+          center: ol.proj.transform([-78.5,-0.25],'EPSG:4326', 'EPSG:3857'),
+          zoom: 8,
+        }),
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        target: 'js-map'
+      });
+
+      const meza = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url:'https://geoserver.idesinde.com:8443/geoserver/Meza/wms',
+          params:{
+            LAYERS: 'Meza:Meza',
+            FORMAT: 'image/png',
+            TRANSPARENT:true
+          }
+        })
+      });
+
+      map.addLayer(meza);
+
+      const scaleLineControl = new ol.control.ScaleLine();
+      map.addControl(scaleLineControl);
+
+      map.on('pointermove', function(evt) {
+        var coord = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        document.getElementById('coordBox').innerHTML =
+          'Lat: ' + coord[1].toFixed(6) + ' | Lon: ' + coord[0].toFixed(6);
+      });
     });
   </script>
 

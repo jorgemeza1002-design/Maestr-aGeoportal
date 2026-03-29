@@ -1,35 +1,39 @@
 window.onload = init;
 
 function init() {
-  const osm = new ol.layer.Tile({
-    source: new ol.source.OSM()
-  });
-
-  const wms = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      url: 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms',
-      params: {
-        'LAYERS': 'Meza:Meza',
-        'TILED': true,
-        'FORMAT': 'image/png',
-        'TRANSPARENT': true
-      },
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous'
-    })
-  });
+  const target = document.getElementById('js-map');
+  if (!target || typeof ol === 'undefined') return;
 
   const map = new ol.Map({
     target: 'js-map',
-    layers: [osm, wms],
     view: new ol.View({
-      center: ol.proj.fromLonLat([-78.5, -0.2]),
-      zoom: 10
+      center: ol.proj.transform([-78.5, -0.25], 'EPSG:4326', 'EPSG:3857'),
+      zoom: 8
     }),
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+    ],
     controls: ol.control.defaults().extend([
       new ol.control.ScaleLine()
     ])
   });
+
+  const geoserver = new ol.layer.Tile({
+    source: new ol.source.TileWMS({
+      url: 'https://geoserver.idesinde.com:8443/geoserver/ows?',
+      params: {
+        LAYERS: 'Meza:Meza',
+        FORMAT: 'image/png',
+        TRANSPARENT: true
+      },
+      attributions: '<a href="https://geoserver.idesinde.com:8443/geoserver/web/" target="_blank" rel="noopener noreferrer">GeoServer IDESINDE</a>',
+      crossOrigin: 'anonymous'
+    })
+  });
+
+  map.addLayer(geoserver);
 
   map.on('pointermove', function(evt) {
     const coord = ol.proj.toLonLat(evt.coordinate);
@@ -41,7 +45,7 @@ function init() {
     }
   });
 
-  setTimeout(function () {
+  setTimeout(() => {
     map.updateSize();
   }, 400);
 }

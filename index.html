@@ -9,18 +9,19 @@
 
   <style>
     :root{
-      --bg:#081015;
-      --bg-soft:#101a20;
-      --panel:rgba(13,23,30,.88);
-      --panel-2:rgba(18,30,38,.94);
-      --line:rgba(255,255,255,.08);
-      --text:#edf5f8;
-      --muted:#b7c7ce;
-      --orange:#f59e0b;
-      --orange-2:#fb923c;
-      --accent:#22c55e;
-      --blue:#38bdf8;
-      --shadow:0 24px 60px rgba(0,0,0,.30);
+      --bg:#0b1220;
+      --bg-2:#10192b;
+      --panel:rgba(14,22,36,.92);
+      --panel-2:rgba(18,28,45,.96);
+      --line:rgba(255,255,255,.09);
+      --text:#f3f7fb;
+      --muted:#b8c5d6;
+      --gold:#f5b942;
+      --gold-2:#ff9f43;
+      --sky:#60a5fa;
+      --cyan:#38bdf8;
+      --green:#22c55e;
+      --shadow:0 20px 50px rgba(0,0,0,.28);
       --radius:24px;
       --maxw:1280px;
     }
@@ -33,55 +34,37 @@
       font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 10% 10%, rgba(245,158,11,.07), transparent 18%),
-        radial-gradient(circle at 88% 18%, rgba(56,189,248,.05), transparent 20%),
-        linear-gradient(180deg, #071015 0%, #0b141a 100%);
-      position:relative;
+        radial-gradient(circle at 12% 12%, rgba(245,185,66,.10), transparent 18%),
+        radial-gradient(circle at 88% 16%, rgba(56,189,248,.08), transparent 20%),
+        linear-gradient(180deg, #08111e 0%, #0b1220 48%, #0f172a 100%);
       overflow-x:hidden;
+      position:relative;
     }
 
-    body::before,
-    body::after{
+    body::before{
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
-      z-index:-2;
-    }
-
-    body::before{
-      opacity:.16;
-      background:
-        repeating-radial-gradient(circle at 18% 22%, rgba(255,255,255,.08) 0 1px, transparent 1px 24px),
-        repeating-radial-gradient(circle at 72% 38%, rgba(245,158,11,.09) 0 1px, transparent 1px 20px),
-        repeating-radial-gradient(circle at 48% 76%, rgba(56,189,248,.06) 0 1px, transparent 1px 18px);
-      background-size: 900px 900px, 720px 720px, 1000px 1000px;
-      animation: topoFloat 28s linear infinite;
-    }
-
-    body::after{
-      opacity:.06;
       z-index:-1;
+      opacity:.18;
       background:
-        linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,.35) 50%, transparent 54%) 0 0 / 260px 260px,
-        linear-gradient(295deg, transparent 0 46%, rgba(245,158,11,.28) 50%, transparent 54%) 0 0 / 280px 280px;
-      animation: topoDrift 24s linear infinite;
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,.12) 0 1px, transparent 1px 28px),
+        radial-gradient(circle at 72% 40%, rgba(96,165,250,.11) 0 1px, transparent 1px 24px),
+        radial-gradient(circle at 48% 76%, rgba(245,185,66,.10) 0 1px, transparent 1px 22px);
+      background-size: 900px 900px, 760px 760px, 820px 820px;
+      animation: driftSoft 36s linear infinite;
     }
 
-    @keyframes topoFloat{
-      0%{transform:translate3d(0,0,0) scale(1)}
-      50%{transform:translate3d(-18px,12px,0) scale(1.02)}
-      100%{transform:translate3d(0,0,0) scale(1)}
-    }
-
-    @keyframes topoDrift{
-      0%{background-position:0 0,0 0}
-      100%{background-position:240px 120px,-280px 180px}
+    @keyframes driftSoft{
+      0%{transform:translate3d(0,0,0)}
+      50%{transform:translate3d(-14px,10px,0)}
+      100%{transform:translate3d(0,0,0)}
     }
 
     img{max-width:100%;display:block}
     a{text-decoration:none;color:inherit}
-    button,input{font:inherit}
+    button,input,textarea{font:inherit}
 
     .container{
       width:min(calc(100% - 32px), var(--maxw));
@@ -92,7 +75,7 @@
       position:sticky;
       top:0;
       z-index:1000;
-      background:rgba(7,16,21,.86);
+      background:rgba(8,17,30,.84);
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line);
     }
@@ -115,13 +98,13 @@
       width:46px;
       height:46px;
       border-radius:14px;
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
       display:grid;
       place-items:center;
-      color:#111;
+      color:#111827;
       font-weight:900;
       letter-spacing:.5px;
-      box-shadow:0 12px 26px rgba(245,158,11,.18);
+      box-shadow:0 10px 24px rgba(245,185,66,.22);
     }
 
     .brand-text strong{
@@ -150,13 +133,13 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.03);
       color:var(--text);
-      transition:.2s ease;
+      transition:.22s ease;
       font-weight:600;
     }
 
     .nav-links a:hover{
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#111;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#111827;
       transform:translateY(-1px);
     }
 
@@ -187,12 +170,12 @@
     .hero-copy::after{
       content:"";
       position:absolute;
-      width:280px;
-      height:280px;
+      width:260px;
+      height:260px;
       right:-90px;
-      bottom:-100px;
+      bottom:-90px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(245,158,11,.18), transparent 70%);
+      background:radial-gradient(circle, rgba(245,185,66,.18), transparent 72%);
     }
 
     .tag{
@@ -201,9 +184,9 @@
       gap:8px;
       padding:8px 14px;
       border-radius:999px;
-      background:rgba(245,158,11,.10);
-      border:1px solid rgba(245,158,11,.25);
-      color:#ffd79a;
+      background:rgba(245,185,66,.10);
+      border:1px solid rgba(245,185,66,.24);
+      color:#ffe2a6;
       font-weight:700;
       margin-bottom:16px;
       font-size:.92rem;
@@ -241,12 +224,12 @@
       font-weight:700;
       border:none;
       cursor:pointer;
-      transition:.2s ease;
+      transition:.22s ease;
     }
 
     .btn-primary{
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#111;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#111827;
     }
 
     .btn-secondary{
@@ -276,7 +259,7 @@
       bottom:20px;
       padding:16px 18px;
       border-radius:18px;
-      background:rgba(0,0,0,.54);
+      background:rgba(4,9,18,.62);
       border:1px solid rgba(255,255,255,.12);
       backdrop-filter:blur(10px);
     }
@@ -288,7 +271,7 @@
     }
 
     .hero-badge span{
-      color:#d9e3e8;
+      color:#d9e3ee;
       font-size:.95rem;
       line-height:1.55;
     }
@@ -385,12 +368,12 @@
 
     .module-card{
       padding:24px;
-      transition:.2s ease;
+      transition:.22s ease;
     }
 
     .module-card:hover{
       transform:translateY(-4px);
-      border-color:rgba(245,158,11,.24);
+      border-color:rgba(245,185,66,.24);
     }
 
     .module-icon{
@@ -400,8 +383,8 @@
       display:grid;
       place-items:center;
       font-size:1.5rem;
-      background:linear-gradient(135deg, rgba(245,158,11,.18), rgba(251,146,60,.08));
-      border:1px solid rgba(245,158,11,.22);
+      background:linear-gradient(135deg, rgba(245,185,66,.18), rgba(255,159,67,.08));
+      border:1px solid rgba(245,185,66,.22);
       margin-bottom:16px;
     }
 
@@ -487,20 +470,20 @@
       color:var(--text);
       cursor:pointer;
       font-weight:700;
-      transition:.2s ease;
+      transition:.22s ease;
     }
 
     .chip.active,
     .chip:hover{
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#111;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#111827;
     }
 
     .map-frame{
       overflow:hidden;
       border-radius:18px;
       border:1px solid var(--line);
-      background:#061016;
+      background:#07121d;
     }
 
     .map-frame img{
@@ -517,7 +500,7 @@
       padding:10px 14px;
       border-radius:999px;
       background:rgba(34,197,94,.08);
-      color:#d1ffe0;
+      color:#d8ffe4;
       border:1px solid rgba(34,197,94,.22);
       font-weight:700;
     }
@@ -558,12 +541,12 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       font-weight:700;
-      transition:.2s ease;
+      transition:.22s ease;
     }
 
     .download-link:hover{
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#111;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#111827;
     }
 
     .ol-layout{
@@ -600,7 +583,7 @@
       padding:12px 14px;
       border-radius:14px;
       border:1px solid var(--line);
-      background:#0f161b;
+      background:#0d1625;
       color:#fff;
       outline:none;
     }
@@ -614,7 +597,7 @@
       padding:12px 14px;
       border-radius:14px;
       border:1px solid var(--line);
-      background:#11181d;
+      background:#111b2b;
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -635,7 +618,7 @@
       border-radius:20px;
       overflow:hidden;
       border:1px solid var(--line);
-      background:#05090c;
+      background:#08111e;
     }
 
     #ol-map{
@@ -647,15 +630,15 @@
       margin-top:12px;
       padding:12px 14px;
       border-radius:14px;
-      background:#0f161b;
+      background:#0d1625;
       border:1px solid var(--line);
       font-weight:600;
-      color:#ffd79a;
+      color:#ffe09b;
     }
 
     .pdf-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr;
       gap:20px;
     }
 
@@ -692,6 +675,23 @@
       margin:0 0 10px;
     }
 
+    .contact-form input,
+    .contact-form textarea{
+      width:100%;
+      margin-bottom:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#0d1625;
+      color:#fff;
+      outline:none;
+    }
+
+    .contact-form textarea{
+      min-height:160px;
+      resize:vertical;
+    }
+
     .footer{
       padding:30px 0 50px;
     }
@@ -709,7 +709,7 @@
     }
 
     .ol-scale-line{
-      background:rgba(8,16,21,.72) !important;
+      background:rgba(8,17,30,.74) !important;
       border-radius:10px;
       padding:6px 8px;
       bottom:12px !important;
@@ -798,7 +798,7 @@
         <a href="#wms">WMS</a>
         <a href="#descargas">Descargas</a>
         <a href="#openlayers">OpenLayers</a>
-        <a href="#documentos">Documentos</a>
+        <a href="#documentos">Documento</a>
         <a href="#qgiscloud">QGIS Cloud</a>
         <a href="#contacto">Contacto</a>
       </nav>
@@ -815,7 +815,7 @@
           <p>
             Este geoportal reúne mi perfil profesional, áreas de experiencia, galería de campo,
             servicios WMS, enlaces de descarga de capas geográficas, visor OpenLayers, acceso al mapa
-            publicado en QGIS Cloud y descarga directa de mi hoja de vida en PDF.
+            publicado en QGIS Cloud, visualización de un documento académico y descarga directa de mi hoja de vida en PDF.
           </p>
 
           <div class="hero-actions">
@@ -953,34 +953,42 @@
         <article class="panel viewer-card">
           <div class="section-head" style="margin-bottom:14px">
             <h2>Visor WMS</h2>
-            <p>Botones para cambiar la visualización del servicio WMS entre composición, puntos, líneas y polígonos.</p>
+            <p>Botones para cambiar la visualización entre las 3 capas subidas y su composición.</p>
           </div>
 
           <div class="toolbar">
             <button class="chip active" type="button"
-              onclick="setLayer(this,'Composición general','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3AComposicionSinde&bbox=486796.7392569149%2C9434731.642527372%2C1151083.4608458264%2C1.0192994453178741E7&width=800&height=800&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Composición</button>
+              onclick="setLayer(this,'Composición de las 3 capas', getWmsPreviewUrl(['Meza:Zona_urbana_a','Meza:via_l','Meza:Nombres áreas']))">
+              Composición
+            </button>
 
             <button class="chip" type="button"
-              onclick="setLayer(this,'Poblados','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Apoblado&bbox=510485.0064000003%2C9447316.099%2C1148633.2259999998%2C1.01603093E7&width=687&height=768&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Puntos</button>
+              onclick="setLayer(this,'Nombres áreas', getWmsPreviewUrl('Meza:Nombres áreas'))">
+              Nombres áreas
+            </button>
 
             <button class="chip" type="button"
-              onclick="setLayer(this,'Vías','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Avia&bbox=491421.0%2C9462016.4237%2C1125413.3671000004%2C1.01505776101E7&width=707&height=768&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Líneas</button>
+              onclick="setLayer(this,'Zona urbana', getWmsPreviewUrl('Meza:Zona_urbana_a'))">
+              Zona urbana
+            </button>
 
             <button class="chip" type="button"
-              onclick="setLayer(this,'Provincias','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Aprovincias&bbox=-732143.488300001%2C9445216.3501%2C1147851.6417000005%2C1.01893983531E7&width=768&height=330&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Polígonos</button>
+              onclick="setLayer(this,'Vías', getWmsPreviewUrl('Meza:via_l'))">
+              Vías
+            </button>
           </div>
 
           <div class="map-frame">
-            <img id="mapa" src="https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3AComposicionSinde&bbox=486796.7392569149%2C9434731.642527372%2C1151083.4608458264%2C1.0192994453178741E7&width=800&height=800&srs=EPSG%3A32717&styles=&format=image%2Fpng" alt="Mapa WMS">
+            <img id="mapa" alt="Mapa WMS">
           </div>
 
-          <div class="status" id="layerName">Capa activa: Composición general</div>
+          <div class="status" id="layerName">Capa activa: Composición de las 3 capas</div>
         </article>
 
         <article class="panel viewer-card">
           <div class="section-head" style="margin-bottom:14px">
             <h2>Hoja de vida en PDF</h2>
-            <p>Visualización directa del PDF y descarga manual dentro del mismo geoportal.</p>
+            <p>Visualización directa del PDF y descarga manual dentro del geoportal.</p>
           </div>
 
           <div class="pdf-frame">
@@ -1004,32 +1012,32 @@
 
         <div class="downloads">
           <article class="panel download-card">
-            <strong>Poblados</strong>
-            <p>Capa vectorial de puntos disponible para descarga.</p>
+            <strong>Nombres áreas</strong>
+            <p>Capa publicada en GeoServer para descarga directa.</p>
             <div class="download-links">
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=shape-zip" target="_blank">SHP</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=GML2" target="_blank">GML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=Meza:Nombres%20%C3%A1reas&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:Nombres%20%C3%A1reas&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:Nombres%20%C3%A1reas&outputFormat=GML2" target="_blank">GML</a>
+            </div>
+          </article>
+
+          <article class="panel download-card">
+            <strong>Zona urbana</strong>
+            <p>Capa poligonal urbana publicada en GeoServer.</p>
+            <div class="download-links">
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=Meza:Zona_urbana_a&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:Zona_urbana_a&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:Zona_urbana_a&outputFormat=GML2" target="_blank">GML</a>
             </div>
           </article>
 
           <article class="panel download-card">
             <strong>Vías</strong>
-            <p>Capa lineal para análisis y consulta geográfica.</p>
+            <p>Capa lineal de red vial publicada en GeoServer.</p>
             <div class="download-links">
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:via&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:via&outputFormat=shape-zip" target="_blank">SHP</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:via&outputFormat=GML2" target="_blank">GML</a>
-            </div>
-          </article>
-
-          <article class="panel download-card">
-            <strong>Provincias</strong>
-            <p>Capa poligonal publicada para descarga en varios formatos.</p>
-            <div class="download-links">
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=shape-zip" target="_blank">SHP</a>
-              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=GML2" target="_blank">GML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=Meza:via_l&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:via_l&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/Meza/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Meza:via_l&outputFormat=GML2" target="_blank">GML</a>
             </div>
           </article>
         </div>
@@ -1040,7 +1048,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Visor OpenLayers</h2>
-          <p>Mapa base OpenStreetMap con superposición WMS, barra de escala y coordenadas en Lat/Long.</p>
+          <p>Mapa base OpenStreetMap con superposición WMS de la composición de capas, barra de escala y coordenadas en Lat/Long.</p>
         </div>
 
         <div class="ol-layout">
@@ -1062,7 +1070,7 @@
                   <span>Base</span>
                 </div>
                 <div class="layer-item">
-                  <label><input type="checkbox" id="chkWMS" checked onchange="toggleLayer('wms')">Composición WMS</label>
+                  <label><input type="checkbox" id="chkComp" checked onchange="toggleLayer('comp')">Composición WMS</label>
                   <span>WMS</span>
                 </div>
               </div>
@@ -1085,25 +1093,19 @@
     <section class="section" id="documentos">
       <div class="container">
         <div class="section-head">
-          <h2>Documentos y hoja de vida</h2>
-          <p>Sección adicional con visualización y descarga de documentos PDF dentro del sitio.</p>
+          <h2>Documento académico</h2>
+          <p>Visualización del documento cargado en GitHub y acceso directo para abrirlo o descargarlo.</p>
         </div>
 
         <div class="pdf-grid">
           <article class="panel pdf-card">
-            <h3 style="margin-top:0">Hoja de vida descargable</h3>
+            <h3 style="margin-top:0">Documento PDF</h3>
             <div class="pdf-frame">
-              <iframe src="HOJA DE VIDA JORGE MEZA.pdf" title="PDF hoja de vida"></iframe>
+              <iframe src="T-UCE-0004-44.pdf" title="Documento académico PDF"></iframe>
             </div>
             <div class="hero-actions" style="margin-top:16px">
-              <a class="btn btn-primary" href="HOJA DE VIDA JORGE MEZA.pdf" download>Descargar hoja de vida</a>
-            </div>
-          </article>
-
-          <article class="panel pdf-card">
-            <h3 style="margin-top:0">Documento técnico adicional</h3>
-            <div class="pdf-frame">
-              <iframe src="https://www.geoportaligm.gob.ec/downloads/public/manual_usuario.pdf" title="Documento técnico"></iframe>
+              <a class="btn btn-primary" href="T-UCE-0004-44.pdf" download>Descargar documento</a>
+              <a class="btn btn-secondary" href="T-UCE-0004-44.pdf" target="_blank">Abrir documento</a>
             </div>
           </article>
         </div>
@@ -1129,7 +1131,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Contacto</h2>
-          <p>Canales de comunicación profesional y acceso directo a correo electrónico.</p>
+          <p>Formulario con envío automático al correo del usuario.</p>
         </div>
 
         <div class="contact-grid">
@@ -1141,9 +1143,21 @@
           </div>
 
           <div class="panel contact-card">
-            <h3>Escríbeme</h3>
-            <p>Puedes usar este botón para abrir tu gestor de correo y escribir directamente.</p>
-            <a class="btn btn-primary" href="mailto:jorgemeza0210@outlook.es?subject=Contacto%20desde%20geoportal&body=Hola%20Jorge,%20te%20escribo%20desde%20tu%20geoportal.">Enviar correo</a>
+            <h3>Enviar mensaje</h3>
+
+            <form class="contact-form" action="https://formsubmit.co/jorgemeza0210@outlook.es" method="POST">
+              <input type="text" name="name" placeholder="Tu nombre" required>
+              <input type="email" name="email" placeholder="Tu correo" required>
+              <input type="text" name="subject" placeholder="Asunto" required>
+              <textarea name="message" placeholder="Escribe tu mensaje" required></textarea>
+
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_subject" value="Nuevo mensaje desde el geoportal">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_next" value="https://TU-USUARIO.github.io/TU-REPOSITORIO/">
+
+              <button type="submit" class="btn btn-primary">Enviar correo</button>
+            </form>
           </div>
         </div>
       </div>
@@ -1163,6 +1177,16 @@
   <script src="https://cdn.jsdelivr.net/npm/ol@v10.4.0/dist/ol.js"></script>
 
   <script>
+    const geoserverBase = 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms';
+    const bbox32717 = '910962.3734,9876008.0187,1109917.8715,10018101.513';
+    const wmsWidth = 900;
+    const wmsHeight = 900;
+
+    function getWmsPreviewUrl(layerNames) {
+      const layers = Array.isArray(layerNames) ? layerNames.join(',') : layerNames;
+      return `${geoserverBase}?service=WMS&version=1.1.0&request=GetMap&layers=${encodeURIComponent(layers)}&bbox=${bbox32717}&width=${wmsWidth}&height=${wmsHeight}&srs=EPSG:32717&styles=&format=image/png&transparent=true`;
+    }
+
     function setLayer(button, label, imageUrl){
       const image = document.getElementById('mapa');
       const layerName = document.getElementById('layerName');
@@ -1175,12 +1199,16 @@
       buttons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
     }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('mapa').src = getWmsPreviewUrl(['Meza:Zona_urbana_a','Meza:via_l','Meza:Nombres áreas']);
+    });
   </script>
 
   <script>
     let mapOL;
     let osmLayer;
-    let wmsLayer;
+    let composicionLayer;
 
     function initMap() {
       osmLayer = new ol.layer.Tile({
@@ -1188,24 +1216,27 @@
         visible: true
       });
 
-      wmsLayer = new ol.layer.Tile({
+      composicionLayer = new ol.layer.Tile({
         source: new ol.source.TileWMS({
-          url: 'https://geoserver.idesinde.com:8443/geoserver/ows?',
+          url: 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms',
           params: {
-            'LAYERS': 'sinde:ComposicionSinde',
+            'LAYERS': 'Meza:Zona_urbana_a,Meza:via_l,Meza:Nombres áreas',
             'FORMAT': 'image/png',
-            'TRANSPARENT': true
-          }
+            'TRANSPARENT': true,
+            'TILED': true
+          },
+          serverType: 'geoserver',
+          crossOrigin: 'anonymous'
         }),
         visible: true
       });
 
       mapOL = new ol.Map({
         target: 'ol-map',
-        layers: [osmLayer, wmsLayer],
+        layers: [osmLayer, composicionLayer],
         view: new ol.View({
-          center: ol.proj.fromLonLat([-78.5, -0.25]),
-          zoom: 7
+          center: ol.proj.fromLonLat([-78.50, -0.20]),
+          zoom: 10
         }),
         controls: ol.control.defaults().extend([
           new ol.control.ScaleLine()
@@ -1217,14 +1248,18 @@
         document.getElementById('coordBox').textContent =
           'Lat: ' + coord[1].toFixed(6) + ' | Long: ' + coord[0].toFixed(6);
       });
+
+      setTimeout(() => {
+        mapOL.updateSize();
+      }, 300);
     }
 
     function toggleLayer(type){
       if(type === 'osm'){
         osmLayer.setVisible(document.getElementById('chkOSM').checked);
       }
-      if(type === 'wms'){
-        wmsLayer.setVisible(document.getElementById('chkWMS').checked);
+      if(type === 'comp'){
+        composicionLayer.setVisible(document.getElementById('chkComp').checked);
       }
     }
 

@@ -9,19 +9,19 @@
 
   <style>
     :root{
-      --bg:#0b1220;
-      --bg-2:#10192b;
-      --panel:rgba(14,22,36,.92);
-      --panel-2:rgba(18,28,45,.96);
-      --line:rgba(255,255,255,.09);
+      --bg:#0a1630;
+      --bg-2:#102448;
+      --panel:rgba(11,24,48,.90);
+      --panel-2:rgba(16,33,62,.96);
+      --line:rgba(255,255,255,.10);
       --text:#f3f7fb;
-      --muted:#b8c5d6;
-      --gold:#f5b942;
-      --gold-2:#ff9f43;
-      --sky:#60a5fa;
-      --cyan:#38bdf8;
+      --muted:#c0cede;
+      --gold:#d6a15f;
+      --gold-2:#b8783a;
+      --sky:#74b9ff;
+      --cyan:#4fc3f7;
       --green:#22c55e;
-      --shadow:0 20px 50px rgba(0,0,0,.28);
+      --shadow:0 20px 50px rgba(0,0,0,.30);
       --radius:24px;
       --maxw:1280px;
     }
@@ -34,9 +34,9 @@
       font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 12% 12%, rgba(245,185,66,.10), transparent 18%),
-        radial-gradient(circle at 88% 16%, rgba(56,189,248,.08), transparent 20%),
-        linear-gradient(180deg, #08111e 0%, #0b1220 48%, #0f172a 100%);
+        radial-gradient(circle at 12% 10%, rgba(116,185,255,.10), transparent 18%),
+        radial-gradient(circle at 85% 15%, rgba(79,195,247,.08), transparent 20%),
+        linear-gradient(180deg, #081428 0%, #0b1d3a 45%, #102448 100%);
       overflow-x:hidden;
       position:relative;
     }
@@ -47,19 +47,19 @@
       inset:0;
       pointer-events:none;
       z-index:-1;
-      opacity:.18;
+      opacity:.32;
       background:
-        radial-gradient(circle at 20% 25%, rgba(255,255,255,.12) 0 1px, transparent 1px 28px),
-        radial-gradient(circle at 72% 40%, rgba(96,165,250,.11) 0 1px, transparent 1px 24px),
-        radial-gradient(circle at 48% 76%, rgba(245,185,66,.10) 0 1px, transparent 1px 22px);
+        repeating-radial-gradient(circle at 22% 28%, rgba(182,120,58,.55) 0 1px, transparent 1px 20px),
+        repeating-radial-gradient(circle at 74% 36%, rgba(214,161,95,.42) 0 1px, transparent 1px 18px),
+        repeating-radial-gradient(circle at 48% 74%, rgba(160,102,48,.32) 0 1px, transparent 1px 16px);
       background-size: 900px 900px, 760px 760px, 820px 820px;
-      animation: driftSoft 36s linear infinite;
+      animation: topoBrownMove 28s linear infinite;
     }
 
-    @keyframes driftSoft{
-      0%{transform:translate3d(0,0,0)}
-      50%{transform:translate3d(-14px,10px,0)}
-      100%{transform:translate3d(0,0,0)}
+    @keyframes topoBrownMove{
+      0%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(-18px,12px,0) scale(1.02)}
+      100%{transform:translate3d(0,0,0) scale(1)}
     }
 
     img{max-width:100%;display:block}
@@ -75,7 +75,7 @@
       position:sticky;
       top:0;
       z-index:1000;
-      background:rgba(8,17,30,.84);
+      background:rgba(7,18,38,.84);
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line);
     }
@@ -104,7 +104,7 @@
       color:#111827;
       font-weight:900;
       letter-spacing:.5px;
-      box-shadow:0 10px 24px rgba(245,185,66,.22);
+      box-shadow:0 10px 24px rgba(182,120,58,.28);
     }
 
     .brand-text strong{
@@ -284,7 +284,8 @@
       margin-bottom:18px;
     }
 
-    .section-head h2{
+    .section-head h2,
+    .section-head h3{
       margin:0;
       font-size:clamp(1.55rem,2.8vw,2.25rem);
     }
@@ -549,81 +550,41 @@
       color:#111827;
     }
 
-    .ol-layout{
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:20px;
+    .ol-wrap{
+      display:block;
     }
 
-    .control-card{
-      padding:18px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      margin-bottom:14px;
+    .ol-panel .panel-header{
+      padding:22px 22px 0 22px;
     }
 
-    .control-card h4{
-      margin:0 0 10px;
+    .ol-panel .panel-header h4{
+      margin:0 0 8px;
+      font-size:1.2rem;
     }
 
-    .control-card p{
+    .ol-panel .panel-header p{
+      margin:0;
       color:var(--muted);
-      line-height:1.7;
-      margin:0 0 12px;
-    }
-
-    .search-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-    }
-
-    .search-row input{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#0d1625;
-      color:#fff;
-      outline:none;
-    }
-
-    .layer-list{
-      display:grid;
-      gap:10px;
-    }
-
-    .layer-item{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#111b2b;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
-
-    .layer-item label{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      cursor:pointer;
-      flex:1;
-      color:#dbe6eb;
+      line-height:1.75;
     }
 
     .map-stage{
-      min-height:680px;
+      height:640px;
+      min-height:640px;
+      padding:14px;
       border-radius:20px;
       overflow:hidden;
-      border:1px solid var(--line);
       background:#08111e;
     }
 
-    #ol-map{
+    .map-unido-canvas{
       width:100%;
-      height:680px;
+      height:100%;
+      border-radius:18px;
+      border:1px solid var(--line);
+      overflow:hidden;
+      background:#0a1322;
     }
 
     .coord-box{
@@ -730,8 +691,6 @@
       .media-grid,
       .viewer-grid,
       .downloads,
-      .ol-layout,
-      .pdf-grid,
       .contact-grid{
         grid-template-columns:1fr;
       }
@@ -744,7 +703,7 @@
         grid-template-columns:1fr 1fr;
       }
 
-      #ol-map,.map-stage,
+      .map-stage,
       .pdf-frame iframe,
       .qgis-frame iframe{
         height:560px;
@@ -762,15 +721,11 @@
         grid-template-columns:1fr;
       }
 
-      .search-row{
-        grid-template-columns:1fr;
-      }
-
       .hero-side img{
         min-height:340px;
       }
 
-      #ol-map,.map-stage,
+      .map-stage,
       .pdf-frame iframe,
       .qgis-frame iframe{
         height:460px;
@@ -797,9 +752,9 @@
         <a href="#multimedia">Multimedia</a>
         <a href="#wms">WMS</a>
         <a href="#descargas">Descargas</a>
-        <a href="#openlayers">OpenLayers</a>
+        <a href="#mapa-unido">OpenLayers</a>
         <a href="#documentos">Documento</a>
-        <a href="#qgiscloud">QGIS Cloud</a>
+        <a href="#visor-qgis">QGIS Cloud</a>
         <a href="#contacto">Contacto</a>
       </nav>
     </div>
@@ -819,7 +774,7 @@
           </p>
 
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#qgiscloud">Ver mapa publicado</a>
+            <a class="btn btn-primary" href="#visor-qgis">Ver mapa publicado</a>
             <a class="btn btn-secondary" href="HOJA DE VIDA JORGE MEZA.pdf" download>Descargar hoja de vida PDF</a>
           </div>
         </article>
@@ -958,7 +913,7 @@
 
           <div class="toolbar">
             <button class="chip active" type="button"
-              onclick="setLayer(this,'Composición de las 3 capas', getWmsPreviewUrl(['Meza:Zona_urbana_a','Meza:via_l','Meza:Nombres áreas']))">
+              onclick="setLayer(this,'Composición de las 3 capas', getWmsPreviewUrl('Meza:Meza'))">
               Composición
             </button>
 
@@ -1044,47 +999,45 @@
       </div>
     </section>
 
-    <section class="section" id="openlayers">
+    <section id="mapa-unido" class="section">
       <div class="container">
         <div class="section-head">
-          <h2>Visor OpenLayers</h2>
-          <p>Mapa base OpenStreetMap con superposición WMS de la composición de capas, barra de escala y coordenadas en Lat/Long.</p>
+          <div>
+            <h3>Mapa unido integrado</h3>
+            <p>Se incorpora un visor OpenLayers con mapa base OSM y la superposición WMS de la composición publicada en GeoServer.</p>
+          </div>
         </div>
 
-        <div class="ol-layout">
-          <div>
-            <div class="control-card">
-              <h4>Búsqueda rápida</h4>
-              <p>Buscador simple configurado para referencias de ejemplo.</p>
-              <div class="search-row">
-                <input type="text" id="placeInput" placeholder="Ejemplo: Quito">
-                <button class="btn btn-primary" type="button" onclick="buscarLugar()">Buscar</button>
-              </div>
-            </div>
-
-            <div class="control-card">
-              <h4>Capas visibles</h4>
-              <div class="layer-list">
-                <div class="layer-item">
-                  <label><input type="checkbox" id="chkOSM" checked onchange="toggleLayer('osm')">Mapa base OSM</label>
-                  <span>Base</span>
-                </div>
-                <div class="layer-item">
-                  <label><input type="checkbox" id="chkComp" checked onchange="toggleLayer('comp')">Composición WMS</label>
-                  <span>WMS</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="coord-box" id="coordBox">
-              Coordenadas: mueve el cursor sobre el mapa
-            </div>
+        <article class="panel ol-panel">
+          <div class="panel-header">
+            <h4>Visor OpenLayers del mapa unido</h4>
+            <p>Este apartado integra OpenStreetMap como fondo y la capa <code>Meza:Meza</code> desde GeoServer, con barra de escala y coordenadas en Lat/Long.</p>
+            <div class="coord-box" id="coordBox">Coordenadas: mueve el cursor sobre el mapa</div>
           </div>
 
-          <div class="panel">
-            <div class="map-stage">
-              <div id="ol-map"></div>
+          <div class="ol-wrap">
+            <div class="control-card" style="padding:18px; margin:22px;">
+              <div class="map-stage" style="height:640px; min-height:640px; padding:14px;">
+                <div id="js-map" class="map-unido-canvas" aria-label="Mapa unido con OpenLayers"></div>
+              </div>
             </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="visor-qgis" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h3>Mapa publicado desde QGIS Cloud</h3>
+            <p>Visor interactivo publicado desde QGIS mediante el servicio QGIS Cloud.</p>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:22px;">
+          <div class="qgis-frame">
+            <iframe src="https://qgiscloud.com/JMEZA/MAPA_BASE/" title="QGIS Cloud Jorge Meza"></iframe>
           </div>
         </div>
       </div>
@@ -1108,21 +1061,6 @@
               <a class="btn btn-secondary" href="T-UCE-0004-44.pdf" target="_blank">Abrir documento</a>
             </div>
           </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="qgiscloud">
-      <div class="container">
-        <div class="section-head">
-          <h2>Mapa publicado en QGIS Cloud</h2>
-          <p>Integración directa del visor publicado en QGIS Cloud como parte del geoportal.</p>
-        </div>
-
-        <div class="panel" style="padding:22px;">
-          <div class="qgis-frame">
-            <iframe src="https://qgiscloud.com/JMEZA/MAPA_BASE/" title="QGIS Cloud Jorge Meza"></iframe>
-          </div>
         </div>
       </div>
     </section>
@@ -1201,39 +1139,35 @@
     }
 
     document.addEventListener('DOMContentLoaded', function(){
-      document.getElementById('mapa').src = getWmsPreviewUrl(['Meza:Zona_urbana_a','Meza:via_l','Meza:Nombres áreas']);
+      document.getElementById('mapa').src = getWmsPreviewUrl('Meza:Meza');
     });
   </script>
 
   <script>
-    let mapOL;
-    let osmLayer;
-    let composicionLayer;
+    let mapUnido;
 
-    function initMap() {
-      osmLayer = new ol.layer.Tile({
-        source: new ol.source.OSM(),
-        visible: true
+    function initMapaUnido() {
+      const osm = new ol.layer.Tile({
+        source: new ol.source.OSM()
       });
 
-      composicionLayer = new ol.layer.Tile({
+      const wms = new ol.layer.Tile({
         source: new ol.source.TileWMS({
           url: 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms',
           params: {
-            'LAYERS': 'Meza:Zona_urbana_a,Meza:via_l,Meza:Nombres áreas',
+            'LAYERS': 'Meza:Meza',
+            'TILED': true,
             'FORMAT': 'image/png',
-            'TRANSPARENT': true,
-            'TILED': true
+            'TRANSPARENT': true
           },
           serverType: 'geoserver',
           crossOrigin: 'anonymous'
-        }),
-        visible: true
+        })
       });
 
-      mapOL = new ol.Map({
-        target: 'ol-map',
-        layers: [osmLayer, composicionLayer],
+      mapUnido = new ol.Map({
+        target: 'js-map',
+        layers: [osm, wms],
         view: new ol.View({
           center: ol.proj.fromLonLat([-78.50, -0.20]),
           zoom: 10
@@ -1243,49 +1177,18 @@
         ])
       });
 
-      mapOL.on('pointermove', function(evt){
+      mapUnido.on('pointermove', function(evt){
         const coord = ol.proj.toLonLat(evt.coordinate);
         document.getElementById('coordBox').textContent =
           'Lat: ' + coord[1].toFixed(6) + ' | Long: ' + coord[0].toFixed(6);
       });
 
       setTimeout(() => {
-        mapOL.updateSize();
-      }, 300);
+        mapUnido.updateSize();
+      }, 400);
     }
 
-    function toggleLayer(type){
-      if(type === 'osm'){
-        osmLayer.setVisible(document.getElementById('chkOSM').checked);
-      }
-      if(type === 'comp'){
-        composicionLayer.setVisible(document.getElementById('chkComp').checked);
-      }
-    }
-
-    function buscarLugar(){
-      const text = document.getElementById('placeInput').value.trim().toLowerCase();
-
-      const lugares = {
-        'quito': [-78.5, -0.18],
-        'ecuador': [-78.1834, -1.8312],
-        'guayaquil': [-79.8891, -2.1894],
-        'cuenca': [-79.0045, -2.9001],
-        'ambato': [-78.6167, -1.2491]
-      };
-
-      if(lugares[text]){
-        mapOL.getView().animate({
-          center: ol.proj.fromLonLat(lugares[text]),
-          zoom: 11,
-          duration: 1200
-        });
-      } else {
-        alert('Lugar no configurado en este ejemplo.');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', initMap);
+    window.addEventListener('load', initMapaUnido);
   </script>
 
 </body>

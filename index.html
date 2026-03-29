@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geoportal Profesional | Jorge Meza</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.4.0/ol.css">
+
+  <style>
+    :root{
+      --bg:#081015;
+      --bg-soft:#101a20;
+      --panel:rgba(13,23,30,.88);
+      --panel-2:rgba(18,30,38,.94);
+      --line:rgba(255,255,255,.08);
+      --text:#edf5f8;
+      --muted:#b7c7ce;
+      --orange:#f59e0b;
+      --orange-2:#fb923c;
+      --accent:#22c55e;
+      --blue:#38bdf8;
+      --shadow:0 24px 60px rgba(0,0,0,.30);
+      --radius:24px;
+      --maxw:1280px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(245,158,11,.07), transparent 18%),
+        radial-gradient(circle at 88% 18%, rgba(56,189,248,.05), transparent 20%),
+        linear-gradient(180deg, #071015 0%, #0b141a 100%);
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
+
+    body::before{
+      opacity:.16;
+      background:
+        repeating-radial-gradient(circle at 18% 22%, rgba(255,255,255,.08) 0 1px, transparent 1px 24px),
+        repeating-radial-gradient(circle at 72% 38%, rgba(245,158,11,.09) 0 1px, transparent 1px 20px),
+        repeating-radial-gradient(circle at 48% 76%, rgba(56,189,248,.06) 0 1px, transparent 1px 18px);
+      background-size: 900px 900px, 720px 720px, 1000px 1000px;
+      animation: topoFloat 28s linear infinite;
+    }
+
+    body::after{
+      opacity:.06;
+      z-index:-1;
+      background:
+        linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,.35) 50%, transparent 54%) 0 0 / 260px 260px,
+        linear-gradient(295deg, transparent 0 46%, rgba(245,158,11,.28) 50%, transparent 54%) 0 0 / 280px 280px;
+      animation: topoDrift 24s linear infinite;
+    }
+
+    @keyframes topoFloat{
+      0%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(-18px,12px,0) scale(1.02)}
+      100%{transform:translate3d(0,0,0) scale(1)}
+    }
+
+    @keyframes topoDrift{
+      0%{background-position:0 0,0 0}
+      100%{background-position:240px 120px,-280px 180px}
+    }
+
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    button,input{font:inherit}
+
+    .container{
+      width:min(calc(100% - 32px), var(--maxw));
+      margin:0 auto;
+    }
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(7,16,21,.86);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      display:grid;
+      place-items:center;
+      color:#111;
+      font-weight:900;
+      letter-spacing:.5px;
+      box-shadow:0 12px 26px rgba(245,158,11,.18);
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:1.08rem;
+      letter-spacing:.4px;
+    }
+
+    .brand-text span{
+      display:block;
+      color:var(--muted);
+      font-size:.88rem;
+      margin-top:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-links a{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      transition:.2s ease;
+      font-weight:600;
+    }
+
+    .nav-links a:hover{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#111;
+      transform:translateY(-1px);
+    }
+
+    .hero{
+      padding:56px 0 28px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg,var(--panel-2),var(--panel));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero-copy{
+      padding:34px;
+      position:relative;
+    }
+
+    .hero-copy::after{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-90px;
+      bottom:-100px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(245,158,11,.18), transparent 70%);
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(245,158,11,.10);
+      border:1px solid rgba(245,158,11,.25);
+      color:#ffd79a;
+      font-weight:700;
+      margin-bottom:16px;
+      font-size:.92rem;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:clamp(2.2rem,4vw,3.9rem);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .hero p{
+      color:var(--muted);
+      line-height:1.86;
+      margin:16px 0 0;
+      font-size:1.02rem;
+      max-width:62ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:24px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:14px 18px;
+      border-radius:16px;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#111;
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--text);
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+
+    .hero-side{
+      position:relative;
+      min-height:100%;
+    }
+
+    .hero-side img{
+      width:100%;
+      height:100%;
+      min-height:520px;
+      object-fit:cover;
+    }
+
+    .hero-badge{
+      position:absolute;
+      left:20px;
+      right:20px;
+      bottom:20px;
+      padding:16px 18px;
+      border-radius:18px;
+      background:rgba(0,0,0,.54);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero-badge strong{
+      display:block;
+      margin-bottom:6px;
+      color:#fff;
+    }
+
+    .hero-badge span{
+      color:#d9e3e8;
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .section{
+      padding:26px 0;
+    }
+
+    .section-head{
+      margin-bottom:18px;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:clamp(1.55rem,2.8vw,2.25rem);
+    }
+
+    .section-head p{
+      margin:8px 0 0;
+      color:var(--muted);
+      line-height:1.75;
+      max-width:72ch;
+    }
+
+    .profile-grid{
+      display:grid;
+      grid-template-columns:340px 1fr;
+      gap:20px;
+    }
+
+    .profile-left,
+    .profile-right{
+      padding:22px;
+    }
+
+    .profile-photo{
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      margin-bottom:16px;
+    }
+
+    .profile-photo img{
+      width:100%;
+      height:420px;
+      object-fit:cover;
+    }
+
+    .mini-card{
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      margin-bottom:10px;
+      color:#dce7ec;
+    }
+
+    .profile-right h3{
+      margin:0 0 10px;
+      font-size:1.5rem;
+    }
+
+    .profile-right p{
+      color:var(--muted);
+      line-height:1.85;
+      margin:0 0 16px;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .info-item{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+    }
+
+    .info-item strong{
+      display:block;
+      margin-bottom:6px;
+      color:#fff;
+    }
+
+    .module-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .module-card{
+      padding:24px;
+      transition:.2s ease;
+    }
+
+    .module-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(245,158,11,.24);
+    }
+
+    .module-icon{
+      width:64px;
+      height:64px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      font-size:1.5rem;
+      background:linear-gradient(135deg, rgba(245,158,11,.18), rgba(251,146,60,.08));
+      border:1px solid rgba(245,158,11,.22);
+      margin-bottom:16px;
+    }
+
+    .module-card h3{
+      margin:0 0 10px;
+      font-size:1.15rem;
+    }
+
+    .module-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .media-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .video-card,
+    .gallery-card{
+      padding:22px;
+    }
+
+    .video-frame,
+    .pdf-frame,
+    .qgis-frame{
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#05090c;
+    }
+
+    .video-placeholder{
+      padding:26px;
+      text-align:center;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    }
+
+    .video-placeholder p{
+      color:var(--muted);
+      line-height:1.7;
+      margin:0 0 16px;
+    }
+
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .gallery-grid img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      border-radius:18px;
+      border:1px solid var(--line);
+    }
+
+    .viewer-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:20px;
+    }
+
+    .viewer-card{
+      padding:22px;
+    }
+
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .chip{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .chip.active,
+    .chip:hover{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#111;
+    }
+
+    .map-frame{
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#061016;
+    }
+
+    .map-frame img{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+    }
+
+    .status{
+      margin-top:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(34,197,94,.08);
+      color:#d1ffe0;
+      border:1px solid rgba(34,197,94,.22);
+      font-weight:700;
+    }
+
+    .downloads{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .download-card{
+      padding:20px;
+    }
+
+    .download-card strong{
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .download-card p{
+      color:var(--muted);
+      line-height:1.7;
+      margin:0 0 14px;
+    }
+
+    .download-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .download-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .download-link:hover{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#111;
+    }
+
+    .ol-layout{
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:20px;
+    }
+
+    .control-card{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      margin-bottom:14px;
+    }
+
+    .control-card h4{
+      margin:0 0 10px;
+    }
+
+    .control-card p{
+      color:var(--muted);
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .search-row{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+    }
+
+    .search-row input{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#0f161b;
+      color:#fff;
+      outline:none;
+    }
+
+    .layer-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .layer-item{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#11181d;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+
+    .layer-item label{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      cursor:pointer;
+      flex:1;
+      color:#dbe6eb;
+    }
+
+    .map-stage{
+      min-height:680px;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:#05090c;
+    }
+
+    #ol-map{
+      width:100%;
+      height:680px;
+    }
+
+    .coord-box{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#0f161b;
+      border:1px solid var(--line);
+      font-weight:600;
+      color:#ffd79a;
+    }
+
+    .pdf-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .pdf-card{
+      padding:22px;
+    }
+
+    .pdf-frame iframe,
+    .qgis-frame iframe{
+      width:100%;
+      height:680px;
+      border:0;
+      background:#fff;
+      border-radius:18px;
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .contact-card{
+      padding:24px;
+    }
+
+    .contact-card h3{
+      margin:0 0 12px;
+    }
+
+    .contact-card p{
+      color:var(--muted);
+      line-height:1.8;
+      margin:0 0 10px;
+    }
+
+    .footer{
+      padding:30px 0 50px;
+    }
+
+    .footer-box{
+      padding:18px 20px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      color:var(--muted);
+    }
+
+    .ol-scale-line{
+      background:rgba(8,16,21,.72) !important;
+      border-radius:10px;
+      padding:6px 8px;
+      bottom:12px !important;
+      left:12px !important;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .ol-scale-line-inner{
+      border-color:#fff !important;
+      color:#fff !important;
+      font-size:12px;
+    }
+
+    @media (max-width:1100px){
+      .hero-grid,
+      .profile-grid,
+      .module-grid,
+      .media-grid,
+      .viewer-grid,
+      .downloads,
+      .ol-layout,
+      .pdf-grid,
+      .contact-grid{
+        grid-template-columns:1fr;
+      }
+
+      .info-grid{
+        grid-template-columns:1fr;
+      }
+
+      .gallery-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      #ol-map,.map-stage,
+      .pdf-frame iframe,
+      .qgis-frame iframe{
+        height:560px;
+        min-height:560px;
+      }
+    }
+
+    @media (max-width:720px){
+      .nav-inner{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .gallery-grid{
+        grid-template-columns:1fr;
+      }
+
+      .search-row{
+        grid-template-columns:1fr;
+      }
+
+      .hero-side img{
+        min-height:340px;
+      }
+
+      #ol-map,.map-stage,
+      .pdf-frame iframe,
+      .qgis-frame iframe{
+        height:460px;
+        min-height:460px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="inicio">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-mark">JM</div>
+        <div class="brand-text">
+          <strong>JORGE MEZA</strong>
+          <span>Geoportal profesional | SIG · Topografía · GNSS · Cartografía</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#perfil">Perfil</a>
+        <a href="#areas">Áreas</a>
+        <a href="#multimedia">Multimedia</a>
+        <a href="#wms">WMS</a>
+        <a href="#descargas">Descargas</a>
+        <a href="#openlayers">OpenLayers</a>
+        <a href="#documentos">Documentos</a>
+        <a href="#qgiscloud">QGIS Cloud</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <article class="panel hero-copy">
+          <div class="tag">Geoportal académico y profesional</div>
+          <h1>Visualización territorial, topografía de precisión y análisis geoespacial aplicado</h1>
+          <p>
+            Este geoportal reúne mi perfil profesional, áreas de experiencia, galería de campo,
+            servicios WMS, enlaces de descarga de capas geográficas, visor OpenLayers, acceso al mapa
+            publicado en QGIS Cloud y descarga directa de mi hoja de vida en PDF.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#qgiscloud">Ver mapa publicado</a>
+            <a class="btn btn-secondary" href="HOJA_DE_VIDA_JORGE_MEZA.pdf" download>Descargar hoja de vida PDF</a>
+          </div>
+        </article>
+
+        <article class="panel hero-side">
+          <img src="IMG_20191203_131912.jpg" alt="Trabajo GNSS en campo">
+          <div class="hero-badge">
+            <strong>Trabajo geodésico y control de campo</strong>
+            <span>Levantamientos GNSS, puntos de control, cartografía temática, catastro y análisis territorial.</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="perfil">
+      <div class="container">
+        <div class="section-head">
+          <h2>Perfil profesional</h2>
+          <p>Resumen profesional basado en formación, experiencia y manejo técnico de herramientas geoespaciales.</p>
+        </div>
+
+        <div class="profile-grid">
+          <div class="panel profile-left">
+            <div class="profile-photo">
+              <img src="IMG-20200613-WA0020.jpg" alt="Jorge Meza en levantamiento de campo">
+            </div>
+            <div class="mini-card"><strong>Nombre:</strong> Jorge Enrique Meza Simbaña</div>
+            <div class="mini-card"><strong>Correo:</strong> jorgemeza0210@outlook.es</div>
+            <div class="mini-card"><strong>Celular:</strong> 0939925872</div>
+            <div class="mini-card"><strong>Ubicación:</strong> Quito, Pichincha, Ecuador</div>
+          </div>
+
+          <div class="panel profile-right">
+            <h3>Ingeniero Agrónomo con experiencia en SIG, cartografía y topografía</h3>
+            <p>
+              Profesional con experiencia en cartografía, topografía, GNSS, procesamiento de imágenes,
+              levantamientos geodésicos, análisis SIG y generación de productos espaciales para proyectos
+              territoriales, ambientales, catastrales y de infraestructura.
+            </p>
+            <p>
+              Manejo técnico de QGIS, ArcGIS, ENVI, AutoCAD Civil 3D, Pix4D, Agisoft y Trimble Business Center,
+              junto con experiencia en uso de equipos GNSS doble frecuencia, drones y estaciones topográficas.
+            </p>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <strong>Formación</strong>
+                Ingeniería Agronómica – Universidad Central del Ecuador
+              </div>
+              <div class="info-item">
+                <strong>Tesis</strong>
+                Intervención antrópica y situación territorial del Parque Nacional Cayambe Coca mediante herramientas SIG
+              </div>
+              <div class="info-item">
+                <strong>Especialización técnica</strong>
+                Redes geodésicas, gestión catastral, formación de formadores y geoestadística
+              </div>
+              <div class="info-item">
+                <strong>Fortalezas</strong>
+                SIG, catastro, cartografía temática, levantamientos GNSS, drones y análisis territorial
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="areas">
+      <div class="container">
+        <div class="section-head">
+          <h2>Áreas de experiencia</h2>
+          <p>Bloques principales de trabajo técnico y profesional dentro del ámbito geoespacial y territorial.</p>
+        </div>
+
+        <div class="module-grid">
+          <article class="panel module-card">
+            <div class="module-icon">🛰️</div>
+            <h3>Geomática y SIG</h3>
+            <p>Procesamiento de información espacial, geodatabases, análisis geográfico, producción cartográfica y gestión de capas temáticas.</p>
+          </article>
+
+          <article class="panel module-card">
+            <div class="module-icon">📍</div>
+            <h3>Topografía y GNSS</h3>
+            <p>Levantamientos de precisión, redes locales, puntos de control, apoyo geodésico y replanteos territoriales.</p>
+          </article>
+
+          <article class="panel module-card">
+            <div class="module-icon">🌿</div>
+            <h3>Ambiente y territorio</h3>
+            <p>Estudios territoriales, uso y cobertura del suelo, análisis ambiental y soporte técnico a planificación sostenible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="multimedia">
+      <div class="container">
+        <div class="section-head">
+          <h2>Multimedia y evidencia de campo</h2>
+          <p>Sección visual con galería de trabajo de campo y acceso directo al video profesional.</p>
+        </div>
+
+        <div class="media-grid">
+          <div class="panel video-card">
+            <h3 style="margin-top:0">Video profesional</h3>
+            <div class="video-frame">
+              <div class="video-placeholder">
+                <p>
+                  Si YouTube no permite insertar el video, usa este botón para abrirlo directamente.
+                </p>
+                <a class="btn btn-primary" href="https://youtu.be/MjvUuKrjv94?si=80rL354lIbHx-ij_" target="_blank">
+                  Ver video en YouTube
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel gallery-card">
+            <h3 style="margin-top:0">Galería de trabajo</h3>
+            <div class="gallery-grid">
+              <img src="IMG_20191203_131912.jpg" alt="Trabajo geodésico en campo">
+              <img src="IMG-20200613-WA0005.jpg" alt="Operación de dron en levantamiento">
+              <img src="IMG-20200613-WA0020.jpg" alt="Colocación de punto de control">
+              <img src="WhatsApp Image 2021-04-01 at 21.34.53 (2).jpeg" alt="Levantamiento GNSS en campo">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="wms">
+      <div class="container viewer-grid">
+        <article class="panel viewer-card">
+          <div class="section-head" style="margin-bottom:14px">
+            <h2>Visor WMS</h2>
+            <p>Botones para cambiar la visualización del servicio WMS entre composición, puntos, líneas y polígonos.</p>
+          </div>
+
+          <div class="toolbar">
+            <button class="chip active" type="button"
+              onclick="setLayer(this,'Composición general','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3AComposicionSinde&bbox=486796.7392569149%2C9434731.642527372%2C1151083.4608458264%2C1.0192994453178741E7&width=800&height=800&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Composición</button>
+
+            <button class="chip" type="button"
+              onclick="setLayer(this,'Poblados','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Apoblado&bbox=510485.0064000003%2C9447316.099%2C1148633.2259999998%2C1.01603093E7&width=687&height=768&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Puntos</button>
+
+            <button class="chip" type="button"
+              onclick="setLayer(this,'Vías','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Avia&bbox=491421.0%2C9462016.4237%2C1125413.3671000004%2C1.01505776101E7&width=707&height=768&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Líneas</button>
+
+            <button class="chip" type="button"
+              onclick="setLayer(this,'Provincias','https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3Aprovincias&bbox=-732143.488300001%2C9445216.3501%2C1147851.6417000005%2C1.01893983531E7&width=768&height=330&srs=EPSG%3A32717&styles=&format=image%2Fpng')">Polígonos</button>
+          </div>
+
+          <div class="map-frame">
+            <img id="mapa" src="https://geoserver.idesinde.com:8443/geoserver/sinde/wms?service=WMS&version=1.1.0&request=GetMap&layers=sinde%3AComposicionSinde&bbox=486796.7392569149%2C9434731.642527372%2C1151083.4608458264%2C1.0192994453178741E7&width=800&height=800&srs=EPSG%3A32717&styles=&format=image%2Fpng" alt="Mapa WMS">
+          </div>
+
+          <div class="status" id="layerName">Capa activa: Composición general</div>
+        </article>
+
+        <article class="panel viewer-card">
+          <div class="section-head" style="margin-bottom:14px">
+            <h2>Hoja de vida en PDF</h2>
+            <p>Visualización directa del PDF y descarga manual dentro del mismo geoportal.</p>
+          </div>
+
+          <div class="pdf-frame">
+            <iframe src="HOJA_DE_VIDA_JORGE_MEZA.pdf" title="Hoja de vida PDF"></iframe>
+          </div>
+
+          <div class="hero-actions" style="margin-top:16px">
+            <a class="btn btn-primary" href="HOJA_DE_VIDA_JORGE_MEZA.pdf" download>Descargar PDF</a>
+            <a class="btn btn-secondary" href="HOJA_DE_VIDA_JORGE_MEZA.pdf" target="_blank">Abrir PDF</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="descargas">
+      <div class="container">
+        <div class="section-head">
+          <h2>Descarga de capas geográficas</h2>
+          <p>Descarga directa desde GeoServer en formatos KML, SHP y GML.</p>
+        </div>
+
+        <div class="downloads">
+          <article class="panel download-card">
+            <strong>Poblados</strong>
+            <p>Capa vectorial de puntos disponible para descarga.</p>
+            <div class="download-links">
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:poblado&outputFormat=GML2" target="_blank">GML</a>
+            </div>
+          </article>
+
+          <article class="panel download-card">
+            <strong>Vías</strong>
+            <p>Capa lineal para análisis y consulta geográfica.</p>
+            <div class="download-links">
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:via&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:via&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:via&outputFormat=GML2" target="_blank">GML</a>
+            </div>
+          </article>
+
+          <article class="panel download-card">
+            <strong>Provincias</strong>
+            <p>Capa poligonal publicada para descarga en varios formatos.</p>
+            <div class="download-links">
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=application%2Fvnd.google-earth.kml%2Bxml" target="_blank">KML</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=shape-zip" target="_blank">SHP</a>
+              <a class="download-link" href="https://geoserver.idesinde.com:8443/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=sinde:provincias&outputFormat=GML2" target="_blank">GML</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="openlayers">
+      <div class="container">
+        <div class="section-head">
+          <h2>Visor OpenLayers</h2>
+          <p>Mapa base OpenStreetMap con superposición WMS, barra de escala y coordenadas en Lat/Long.</p>
+        </div>
+
+        <div class="ol-layout">
+          <div>
+            <div class="control-card">
+              <h4>Búsqueda rápida</h4>
+              <p>Buscador simple configurado para referencias de ejemplo.</p>
+              <div class="search-row">
+                <input type="text" id="placeInput" placeholder="Ejemplo: Quito">
+                <button class="btn btn-primary" type="button" onclick="buscarLugar()">Buscar</button>
+              </div>
+            </div>
+
+            <div class="control-card">
+              <h4>Capas visibles</h4>
+              <div class="layer-list">
+                <div class="layer-item">
+                  <label><input type="checkbox" id="chkOSM" checked onchange="toggleLayer('osm')">Mapa base OSM</label>
+                  <span>Base</span>
+                </div>
+                <div class="layer-item">
+                  <label><input type="checkbox" id="chkWMS" checked onchange="toggleLayer('wms')">Composición WMS</label>
+                  <span>WMS</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="coord-box" id="coordBox">
+              Coordenadas: mueve el cursor sobre el mapa
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="map-stage">
+              <div id="ol-map"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="documentos">
+      <div class="container">
+        <div class="section-head">
+          <h2>Documentos y hoja de vida</h2>
+          <p>Sección adicional con visualización y descarga de documentos PDF dentro del sitio.</p>
+        </div>
+
+        <div class="pdf-grid">
+          <article class="panel pdf-card">
+            <h3 style="margin-top:0">Hoja de vida descargable</h3>
+            <div class="pdf-frame">
+              <iframe src="HOJA_DE_VIDA_JORGE_MEZA.pdf" title="PDF hoja de vida"></iframe>
+            </div>
+            <div class="hero-actions" style="margin-top:16px">
+              <a class="btn btn-primary" href="HOJA_DE_VIDA_JORGE_MEZA.pdf" download>Descargar hoja de vida</a>
+            </div>
+          </article>
+
+          <article class="panel pdf-card">
+            <h3 style="margin-top:0">Documento técnico adicional</h3>
+            <div class="pdf-frame">
+              <iframe src="https://www.geoportaligm.gob.ec/proyecto_nacional/CATALOGO_TEMATICO_IEE_IGM.pdf" title="Documento técnico"></iframe>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="qgiscloud">
+      <div class="container">
+        <div class="section-head">
+          <h2>Mapa publicado en QGIS Cloud</h2>
+          <p>Integración directa del visor publicado en QGIS Cloud como parte del geoportal.</p>
+        </div>
+
+        <div class="panel" style="padding:22px;">
+          <div class="qgis-frame">
+            <iframe src="https://qgiscloud.com/JMEZA/MAPA_BASE/" title="QGIS Cloud Jorge Meza"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contacto">
+      <div class="container">
+        <div class="section-head">
+          <h2>Contacto</h2>
+          <p>Canales de comunicación profesional y acceso directo a correo electrónico.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="panel contact-card">
+            <h3>Información directa</h3>
+            <p><strong>Nombre:</strong> Jorge Enrique Meza Simbaña</p>
+            <p><strong>Correo:</strong> jorgemeza0210@outlook.es</p>
+            <p><strong>Celular:</strong> 0939925872</p>
+            <p><strong>Ubicación:</strong> Quito, Pichincha, Ecuador</p>
+          </div>
+
+          <div class="panel contact-card">
+            <h3>Escríbeme</h3>
+            <p>Puedes usar este botón para abrir tu gestor de correo y escribir directamente.</p>
+            <a class="btn btn-primary" href="mailto:jorgemeza0210@outlook.es?subject=Contacto%20desde%20geoportal&body=Hola%20Jorge,%20te%20escribo%20desde%20tu%20geoportal.">Enviar correo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-box">
+        <div>Geoportal profesional de Jorge Meza · SIG · Topografía · Cartografía · GNSS</div>
+        <a class="download-link" href="#inicio">Volver arriba</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.4.0/dist/ol.js"></script>
+
+  <script>
+    function setLayer(button, label, imageUrl){
+      const image = document.getElementById('mapa');
+      const layerName = document.getElementById('layerName');
+      const buttons = document.querySelectorAll('#wms .chip');
+
+      image.src = imageUrl;
+      image.alt = "Mapa de la capa " + label;
+      layerName.textContent = "Capa activa: " + label;
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    }
+  </script>
+
+  <script>
+    let mapOL;
+    let osmLayer;
+    let wmsLayer;
+
+    function initMap() {
+      osmLayer = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        visible: true
+      });
+
+      wmsLayer = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: 'https://geoserver.idesinde.com:8443/geoserver/ows?',
+          params: {
+            'LAYERS': 'sinde:ComposicionSinde',
+            'FORMAT': 'image/png',
+            'TRANSPARENT': true
+          }
+        }),
+        visible: true
+      });
+
+      mapOL = new ol.Map({
+        target: 'ol-map',
+        layers: [osmLayer, wmsLayer],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-78.5, -0.25]),
+          zoom: 7
+        }),
+        controls: ol.control.defaults().extend([
+          new ol.control.ScaleLine()
+        ])
+      });
+
+      mapOL.on('pointermove', function(evt){
+        const coord = ol.proj.toLonLat(evt.coordinate);
+        document.getElementById('coordBox').textContent =
+          'Lat: ' + coord[1].toFixed(6) + ' | Long: ' + coord[0].toFixed(6);
+      });
+    }
+
+    function toggleLayer(type){
+      if(type === 'osm'){
+        osmLayer.setVisible(document.getElementById('chkOSM').checked);
+      }
+      if(type === 'wms'){
+        wmsLayer.setVisible(document.getElementById('chkWMS').checked);
+      }
+    }
+
+    function buscarLugar(){
+      const text = document.getElementById('placeInput').value.trim().toLowerCase();
+
+      const lugares = {
+        'quito': [-78.5, -0.18],
+        'ecuador': [-78.1834, -1.8312],
+        'guayaquil': [-79.8891, -2.1894],
+        'cuenca': [-79.0045, -2.9001],
+        'ambato': [-78.6167, -1.2491]
+      };
+
+      if(lugares[text]){
+        mapOL.getView().animate({
+          center: ol.proj.fromLonLat(lugares[text]),
+          zoom: 11,
+          duration: 1200
+        });
+      } else {
+        alert('Lugar no configurado en este ejemplo.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initMap);
+  </script>
+
+</body>
+</html>

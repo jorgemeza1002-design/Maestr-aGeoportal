@@ -18,9 +18,6 @@
       --muted:#c0cede;
       --gold:#d6a15f;
       --gold-2:#b8783a;
-      --sky:#74b9ff;
-      --cyan:#4fc3f7;
-      --green:#22c55e;
       --shadow:0 20px 50px rgba(0,0,0,.30);
       --radius:24px;
       --maxw:1280px;
@@ -1016,8 +1013,8 @@
           </div>
 
           <div class="ol-wrap">
-            <div class="control-card" style="padding:18px; margin:22px;">
-              <div class="map-stage" style="height:640px; min-height:640px; padding:14px;">
+            <div class="control-card" style="padding: 18px; margin: 22px;">
+              <div class="map-stage" style="height: 640px; min-height: 640px; padding: 14px;">
                 <div id="js-map" class="map-unido-canvas" aria-label="Mapa unido con OpenLayers"></div>
               </div>
             </div>
@@ -1113,6 +1110,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/ol@v10.4.0/dist/ol.js"></script>
+  <script src="mapa.js"></script>
 
   <script>
     const geoserverBase = 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms';
@@ -1141,54 +1139,6 @@
     document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('mapa').src = getWmsPreviewUrl('Meza:Meza');
     });
-  </script>
-
-  <script>
-    let mapUnido;
-
-    function initMapaUnido() {
-      const osm = new ol.layer.Tile({
-        source: new ol.source.OSM()
-      });
-
-      const wms = new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-          url: 'https://geoserver.idesinde.com:8443/geoserver/Meza/wms',
-          params: {
-            'LAYERS': 'Meza:Meza',
-            'TILED': true,
-            'FORMAT': 'image/png',
-            'TRANSPARENT': true
-          },
-          serverType: 'geoserver',
-          crossOrigin: 'anonymous'
-        })
-      });
-
-      mapUnido = new ol.Map({
-        target: 'js-map',
-        layers: [osm, wms],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([-78.50, -0.20]),
-          zoom: 10
-        }),
-        controls: ol.control.defaults().extend([
-          new ol.control.ScaleLine()
-        ])
-      });
-
-      mapUnido.on('pointermove', function(evt){
-        const coord = ol.proj.toLonLat(evt.coordinate);
-        document.getElementById('coordBox').textContent =
-          'Lat: ' + coord[1].toFixed(6) + ' | Long: ' + coord[0].toFixed(6);
-      });
-
-      setTimeout(() => {
-        mapUnido.updateSize();
-      }, 400);
-    }
-
-    window.addEventListener('load', initMapaUnido);
   </script>
 
 </body>
